@@ -35,6 +35,7 @@ if (isset($_SESSION['user_id'])) {
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                    
                     <?php if ($user_role === 'leader'): ?>
                         <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
                     <?php endif; ?>

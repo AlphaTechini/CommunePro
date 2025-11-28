@@ -33,20 +33,24 @@ $stmt->execute([$_SESSION['user_id']]);
 $user_role = $stmt->fetchColumn();
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <title>Messages - Community Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/custom.css?v=<?php echo time(); ?>">
 </head>
 <body class="d-flex flex-column min-vh-100">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="background-animation"></div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
     <div class="container-fluid">
-        <a class="navbar-brand" href="index.php">Community Hub</a>
+        <a class="navbar-brand" href="index.php">
+            <i class="fas fa-cubes me-2"></i>Community Hub
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -54,8 +58,10 @@ $user_role = $stmt->fetchColumn();
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.php">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="proposals.php">Proposals</a></li>
                 <?php if ($user_role === 'leader'): ?>
-                    <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage</a></li>
                 <?php endif; ?>
                 <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="messages.php">Messages</a></li>
@@ -65,25 +71,41 @@ $user_role = $stmt->fetchColumn();
     </div>
 </nav>
 
-<main class="container mt-4 flex-grow-1">
-    <h2>Messages</h2>
-    <div class="list-group">
-        <?php foreach ($conversations as $convo): ?>
-            <a href="conversation.php?with=<?php echo $convo['user_id']; ?>" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><?php echo htmlspecialchars($convo['username']); ?></h5>
-                    <small><?php echo date('M j, Y, g:i a', strtotime($convo['created_at'])); ?></small>
+<main class="container mt-5 flex-grow-1">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-white">Messages</h1>
+        <p class="lead text-white-50">Your recent conversations.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <?php if (empty($conversations)): ?>
+                <div class="form-container text-center">
+                    <p class="lead text-white-50">You have no conversations yet.</p>
                 </div>
-                <p class="mb-1"><?php echo htmlspecialchars(substr($convo['message'], 0, 100)); ?>...</p>
-            </a>
-        <?php endforeach; ?>
+            <?php else: ?>
+                <?php foreach ($conversations as $convo): ?>
+                    <div class="message-item">
+                        <a href="conversation.php?with=<?php echo $convo['user_id']; ?>">
+                            <div class="message-item-header">
+                                <h5 class="text-white mb-0"><?php echo htmlspecialchars($convo['username']); ?></h5>
+                                <small class="text-white-50"><?php echo date('M j, Y, g:i a', strtotime($convo['created_at'])); ?></small>
+                            </div>
+                            <p class="text-white-50 mb-0"><?php echo htmlspecialchars(substr($convo['message'], 0, 100)); ?>...</p>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
     </div>
 </main>
 
-<footer class="bg-dark text-white text-center p-3 mt-auto">
-    <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+<footer class="footer">
+    <div class="container text-center">
+        <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+    </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

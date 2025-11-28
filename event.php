@@ -76,6 +76,7 @@ $stmt->execute([$user_id, $event_id]);
 $user_rsvp = $stmt->fetchColumn();
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,13 +84,16 @@ $user_rsvp = $stmt->fetchColumn();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($event['title']); ?> - Community Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="assets/css/custom.css?v=<?php echo time(); ?>">
 </head>
 <body class="d-flex flex-column min-vh-100">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="background-animation"></div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
     <div class="container-fluid">
-        <a class="navbar-brand" href="index.php">Community Hub</a>
+        <a class="navbar-brand" href="index.php">
+            <i class="fas fa-cubes me-2"></i>Community Hub
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -97,8 +101,10 @@ $user_rsvp = $stmt->fetchColumn();
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.php?community_id=<?php echo $event['community_id']; ?>">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="proposals.php?community_id=<?php echo $event['community_id']; ?>">Proposals</a></li>
                 <?php if ($user_role === 'leader'): ?>
-                    <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage</a></li>
                 <?php endif; ?>
                 <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="messages.php">Messages</a></li>
@@ -110,41 +116,51 @@ $user_rsvp = $stmt->fetchColumn();
 
 <main class="flex-grow-1">
     <section class="container mt-5">
-        <div class="card card-neon mb-4">
-            <div class="card-header">
-                <h1 class="mb-0"><?php echo htmlspecialchars($event['title']); ?></h1>
-                 <small>in <a href="discussions.php?community_id=<?php echo $event['community_id']; ?>"><?php echo htmlspecialchars($event['community_name']); ?></a> by <?php echo htmlspecialchars($event['user_name']); ?> on <?php echo date('M j, Y, g:i a', strtotime($event['created_at'])); ?></small>
+        <div class="event-details-container">
+            <div class="event-details-header">
+                <h1 class="display-4 text-white"><?php echo htmlspecialchars($event['title']); ?></h1>
+                <p class="lead text-white-50">
+                    in <a href="discussions.php?community_id=<?php echo $event['community_id']; ?>" class="text-white-50"><?php echo htmlspecialchars($event['community_name']); ?></a> by <?php echo htmlspecialchars($event['user_name']); ?>
+                </p>
             </div>
-            <div class="card-body">
-                <p><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
-                <p><strong>Starts:</strong> <?php echo date('M j, Y, g:i a', strtotime($event['start_time'])); ?></p>
-                <p><strong>Ends:</strong> <?php echo date('M j, Y, g:i a', strtotime($event['end_time'])); ?></p>
-                <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
+            <div class="event-details-body text-white">
+                <p class="fs-5"><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
+                <hr class="border-light">
+                <div class="row mt-4 fs-5">
+                    <div class="col-md-4">
+                        <p><i class="fas fa-map-marker-alt me-2 text-primary"></i><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><i class="far fa-clock me-2 text-primary"></i><strong>Starts:</strong> <?php echo date('M j, Y, g:i a', strtotime($event['start_time'])); ?></p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><i class="far fa-clock me-2 text-primary"></i><strong>Ends:</strong> <?php echo date('M j, Y, g:i a', strtotime($event['end_time'])); ?></p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <h2>RSVPs</h2>
-        <div class="d-flex justify-content-around mb-4">
-            <div class="text-center">
-                <h3>Attending</h3>
-                <p class="display-4"><?php echo $attending; ?></p>
+        <div class="rsvp-section">
+            <h2 class="text-white mb-4">RSVPs</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-4 text-center">
+                    <p class="rsvp-label">Attending</p>
+                    <p class="rsvp-count text-success"><?php echo $attending; ?></p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <p class="rsvp-label">Not Attending</p>
+                    <p class="rsvp-count text-danger"><?php echo $not_attending; ?></p>
+                </div>
             </div>
-            <div class="text-center">
-                <h3>Not Attending</h3>
-                <p class="display-4"><?php echo $not_attending; ?></p>
-            </div>
-        </div>
-
-        <div class="card card-neon">
-            <div class="card-body text-center">
-                <h2 class="card-title">RSVP</h2>
-                 <form action="event.php?id=<?php echo $event_id; ?>" method="POST" class="d-inline">
+            <div class="mt-4">
+                <h3 class="text-white mb-3">Will you be there?</h3>
+                <form action="event.php?id=<?php echo $event_id; ?>" method="POST" class="d-inline">
                     <input type="hidden" name="rsvp" value="attending">
-                    <button type="submit" class="btn btn-success btn-lg me-2 <?php echo ($user_rsvp === 'attending') ? 'active' : ''; ?>">Attending</button>
+                    <button type="submit" class="btn btn-success btn-lg me-2 <?php echo ($user_rsvp === 'attending') ? 'active' : ''; ?>"><i class="fas fa-check me-2"></i>Attending</button>
                 </form>
                 <form action="event.php?id=<?php echo $event_id; ?>" method="POST" class="d-inline">
                     <input type="hidden" name="rsvp" value="not_attending">
-                    <button type="submit" class="btn btn-danger btn-lg <?php echo ($user_rsvp === 'not_attending') ? 'active' : ''; ?>">Not Attending</button>
+                    <button type="submit" class="btn btn-danger btn-lg <?php echo ($user_rsvp === 'not_attending') ? 'active' : ''; ?>"><i class="fas fa-times me-2"></i>Not Attending</button>
                 </form>
             </div>
         </div>
@@ -152,8 +168,10 @@ $user_rsvp = $stmt->fetchColumn();
     </section>
 </main>
 
-<footer class="bg-dark text-white text-center p-3 mt-auto">
-    <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+<footer class="footer">
+    <div class="container text-center">
+        <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+    </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

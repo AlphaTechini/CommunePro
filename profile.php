@@ -43,12 +43,14 @@ $user_role = $stmt->fetchColumn();
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.php">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="proposals.php">Proposals</a></li>
                 <?php if ($user_role === 'leader'): ?>
                     <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
                 <?php endif; ?>
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="profile.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="messages.php">Messages</a></li>
-                <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
+                <li class="nav-item"><a class.="nav-link" href="logout.php">Logout</a></li>
             </ul>
         </div>
     </div>

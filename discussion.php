@@ -80,8 +80,8 @@ $replies = $stmt->fetchAll();
     <link rel="stylesheet" href="assets/css/custom.css?v=<?php echo time(); ?>">
 </head>
 <body class="d-flex flex-column min-vh-100">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="background-animation"></div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
     <div class="container-fluid">
         <a class="navbar-brand" href="index.php">Community Hub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,12 +91,19 @@ $replies = $stmt->fetchAll();
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
-                <?php if ($user_role === 'leader'): ?>
-                    <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.php">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="proposals.php">Proposals</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if ($user_role === 'leader'): ?>
+                        <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
+                    <?php endif; ?>
+                    <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="messages.php">Messages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="signup.php">Sign Up</a></li>
                 <?php endif; ?>
-                <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
-                <li class="nav-item"><a class="nav-link" href="messages.php">Messages</a></li>
-                <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
             </ul>
         </div>
     </div>
@@ -104,13 +111,13 @@ $replies = $stmt->fetchAll();
 
 <main class="flex-grow-1">
     <section class="container mt-5">
-        <div class="card card-neon mb-4">
+        <div class="card bg-dark text-white mb-4">
             <div class="card-header">
                 <h1 class="mb-0"><?php echo htmlspecialchars($discussion['title']); ?></h1>
                 <small>in <a href="discussions.php?community_id=<?php echo $discussion['community_id']; ?>"><?php echo htmlspecialchars($discussion['community_name']); ?></a> by <?php echo htmlspecialchars($discussion['user_name']); ?> on <?php echo date('M j, Y, g:i a', strtotime($discussion['created_at'])); ?></small>
             </div>
             <div class="card-body">
-                <p><?php echo nl2br(htmlspecialchars($discussion['content'])); ?></p>
+                <p class="card-text"><?php echo nl2br(htmlspecialchars($discussion['content'])); ?></p>
                 <?php if ($discussion['user_id'] == $user_id || $user_role == 'leader'): ?>
                 <div class="mt-3">
                     <a href="edit_discussion.php?id=<?php echo $discussion['id']; ?>" class="btn btn-secondary btn-sm">Edit</a>
@@ -120,17 +127,17 @@ $replies = $stmt->fetchAll();
             </div>
         </div>
 
-        <h2>Replies</h2>
+        <h2 class="text-white">Replies</h2>
         <div class="mb-4">
-            <?php if (empty($replies)): ?>
-                <div class="text-center p-4" style="background-color: #161b22; border-radius: 0.5rem;">
+            <?php if (empty($replies)):
+                <div class="text-center p-4 bg-dark text-white" style="border-radius: 0.5rem;">
                     <p class="mb-0">No replies yet. Be the first to reply!</p>
                 </div>
             <?php else: ?>
-                <?php foreach ($replies as $reply): ?>
-                    <div class="card card-neon mb-3">
+                <?php foreach ($replies as $reply):
+                    <div class="card bg-dark text-white mb-3">
                         <div class="card-body">
-                            <p class="mb-1"><?php echo nl2br(htmlspecialchars($reply['content'])); ?></p>
+                            <p class="card-text"><?php echo nl2br(htmlspecialchars($reply['content'])); ?></p>
                             <small>by <?php echo htmlspecialchars($reply['user_name']); ?> on <?php echo date('M j, Y, g:i a', strtotime($reply['created_at'])); ?></small>
                             <?php if ($reply['user_id'] == $user_id || $user_role == 'leader'): ?>
                             <div class="mt-2">
@@ -144,12 +151,12 @@ $replies = $stmt->fetchAll();
             <?php endif; ?>
         </div>
 
-        <div class="card card-neon">
+        <div class="card bg-dark text-white">
              <div class="card-body">
                 <h2 class="card-title">Post a Reply</h2>
-                <?php if (!empty($errors)): ?>
+                <?php if (!empty($errors):
                     <div class="alert alert-danger">
-                        <?php foreach ($errors as $error): ?>
+                        <?php foreach ($errors as $error):
                             <p><?php echo $error; ?></p>
                         <?php endforeach; ?>
                     </div>
@@ -157,17 +164,19 @@ $replies = $stmt->fetchAll();
                 <form action="discussion.php?id=<?php echo $discussion_id; ?>" method="POST">
                     <div class="mb-3">
                         <label for="content" class="form-label">Your Reply</label>
-                        <textarea class="form-control" id="content" name="content" rows="3" required><?php echo htmlspecialchars($content); ?></textarea>
+                        <textarea class="form-control bg-dark text-white" id="content" name="content" rows="3" required><?php echo htmlspecialchars($content); ?></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-gradient">Post Reply</button>
+                    <button type="submit" class="btn btn-primary">Post Reply</button>
                 </form>
             </div>
         </div>
     </section>
 </main>
 
-<footer class="bg-dark text-white text-center p-3 mt-auto">
-    <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+<footer class="footer">
+    <div class="container text-center">
+        <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+    </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

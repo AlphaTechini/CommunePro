@@ -43,20 +43,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
 
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversation with <?php echo htmlspecialchars($with_user['username']); ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <title>Conversation with <?php echo htmlspecialchars($with_user['username']); ?> - Community Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/custom.css?v=<?php echo time(); ?>">
 </head>
 <body class="d-flex flex-column min-vh-100">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="background-animation"></div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
     <div class="container-fluid">
-        <a class="navbar-brand" href="index.php">Community Hub</a>
+        <a class="navbar-brand" href="index.php">
+            <i class="fas fa-cubes me-2"></i>Community Hub
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -64,8 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.php">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="proposals.php">Proposals</a></li>
                 <?php if ($user_role === 'leader'): ?>
-                    <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage</a></li>
                 <?php endif; ?>
                 <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="messages.php">Messages</a></li>
@@ -75,36 +81,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['message'])) {
     </div>
 </nav>
 
-<main class="container mt-4 flex-grow-1">
-    <h3>Conversation with <?php echo htmlspecialchars($with_user['username']); ?></h3>
-    <div class="card">
-        <div class="card-body" style="height: 400px; overflow-y: scroll;">
+<main class="container mt-5 flex-grow-1 d-flex flex-column">
+    <div class="text-center mb-4">
+        <h1 class="display-5 text-white">Conversation with <?php echo htmlspecialchars($with_user['username']); ?></h1>
+    </div>
+
+    <div class="chat-container flex-grow-1 d-flex flex-column">
+        <div class="chat-messages flex-grow-1">
             <?php foreach ($messages as $msg): ?>
-                <div class="d-flex <?php echo $msg['sender_id'] == $user_id ? 'justify-content-end' : ''; ?> mb-3">
-                    <div class="card <?php echo $msg['sender_id'] == $user_id ? 'bg-primary text-white' : 'bg-light'; ?>" style="max-width: 70%;">
-                        <div class="card-body">
-                            <p class="card-text"><?php echo htmlspecialchars($msg['message']); ?></p>
-                            <small class="text-muted d-block text-end"><?php echo date('M j, Y, g:i a', strtotime($msg['created_at'])); ?></small>
-                        </div>
+                <div class="d-flex <?php echo $msg['sender_id'] == $user_id ? 'justify-content-end' : 'justify-content-start'; ?> mb-3">
+                    <div class="message-bubble <?php echo $msg['sender_id'] == $user_id ? 'message-sent' : 'message-received'; ?>">
+                        <p class="mb-0"><?php echo htmlspecialchars($msg['message']); ?></p>
+                        <small class="d-block text-end mt-1 opacity-75"><?php echo date('g:i a', strtotime($msg['created_at'])); ?></small>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
-        <div class="card-footer">
+        <div class="chat-input-group">
             <form method="POST">
                 <div class="input-group">
-                    <input type="text" name="message" class="form-control" placeholder="Type your message...">
-                    <button type="submit" class="btn btn-primary">Send</button>
+                    <input type="text" name="message" class="form-control" placeholder="Type your message..." autocomplete="off">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </form>
         </div>
     </div>
 </main>
 
-<footer class="bg-dark text-white text-center p-3 mt-auto">
-    <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+<footer class="footer">
+    <div class="container text-center">
+        <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+    </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Scroll to the bottom of the chat on page load
+    const chatMessages = document.querySelector('.chat-messages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+</script>
 </body>
 </html>

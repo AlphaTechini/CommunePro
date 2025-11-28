@@ -103,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                    
                     <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="messages.php">Messages</a></li>
                     <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>

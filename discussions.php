@@ -89,11 +89,16 @@ $total_pages = ceil($total_discussions / $limit);
 // Fetch discussions for the current page
 $sql = 'SELECT d.*, u.name as user_name FROM discussions d JOIN users u ON d.user_id = u.id ' . $where_clause . ' ORDER BY d.created_at DESC LIMIT ? OFFSET ?';
 $stmt = $pdo->prepare($sql);
-$params[] = $limit;
-$params[] = $offset;
-
-foreach ($params as $key => $value) {
-    $stmt->bindValue($key + 1, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+$stmt->bindParam(1, $community_id, PDO::PARAM_INT);
+if (!empty($search)) {
+    $search_param = '%' . $search . '%';
+    $stmt->bindParam(2, $search_param, PDO::PARAM_STR);
+    $stmt->bindParam(3, $search_param, PDO::PARAM_STR);
+    $stmt->bindParam(4, $limit, PDO::PARAM_INT);
+    $stmt->bindParam(5, $offset, PDO::PARAM_INT);
+} else {
+    $stmt->bindParam(2, $limit, PDO::PARAM_INT);
+    $stmt->bindParam(3, $offset, PDO::PARAM_INT);
 }
 
 $stmt->execute();
@@ -121,6 +126,9 @@ $discussions = $stmt->fetchAll();
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                <li class="nav-item"><a class="nav-link" href="discussions.php?community_id=<?php echo $community_id; ?>">Discussions</a></li>
+                <li class="nav-item"><a class="nav-link" href="events.php?community_id=<?php echo $community_id; ?>">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="proposals.php?community_id=<?php echo $community_id; ?>">Proposals</a></li>
                 <?php if ($user_role === 'leader'): ?>
                     <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
                 <?php endif; ?>
@@ -180,9 +188,10 @@ $discussions = $stmt->fetchAll();
                             <h5 class="mb-0">
                                 <a href="discussion.php?id=<?php echo $discussion['id']; ?>"><?php echo htmlspecialchars($discussion['title']); ?></a>
                             </h5>
-                            <small class="text-muted"><?php echo date('M j, Y, g:i a', strtotime($discussion['created_at'])); ?></small>
+                            <small><?php echo date('M j, Y, g:i a', strtotime($discussion['created_at'])); ?></small>
                         </div>
-                        <p class="mb-1 text-muted">Started by: <?php echo htmlspecialchars($discussion['user_name']); ?></p>
+                        <p class="mb-1">Started by: <?php echo htmlspecialchars($discussion['user_name']); ?></p>
+                        <p class="card-text"><?php echo htmlspecialchars($discussion['content']); ?></p>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
