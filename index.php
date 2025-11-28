@@ -24,7 +24,7 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="index.php">Community Hub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,7 +55,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="container">
             <h1 class="display-4">Build Your Community. Shape Your City.</h1>
             <p class="lead">The platform where neighbors connect, leaders emerge, and real change starts with one discussion.</p>
-            <a href="signup.php" class="btn btn-primary btn-gradient me-2">Join Your City</a>
+            <a href="signup.php" class="btn btn-primary me-2">Join Your City</a>
             <a href="communities.php" class="btn btn-secondary">Explore Communities</a>
         </div>
     </header>
@@ -68,28 +68,28 @@ if (isset($_SESSION['user_id'])) {
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                     </div>
                     <h3>Connect</h3>
-                    <p class="text-muted">Join communities in your city and connect with your neighbors.</p>
+                    <p>Join communities in your city and connect with your neighbors.</p>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-icon mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                     </div>
                     <h3>Discuss</h3>
-                    <p class="text-muted">Start and participate in discussions about topics that matter to you.</p>
+                    <p>Start and participate in discussions about topics that matter to you.</p>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-icon mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     </div>
                     <h3>Organize</h3>
-                    <p class="text-muted">Create events and proposals to drive real change in your community.</p>
+                    <p>Create events and proposals to drive real change in your community.</p>
                 </div>
             </div>
         </div>
     </section>
 </main>
 
-<footer class="bg-dark text-white text-center p-3 mt-auto">
+<footer class="footer text-center">
     <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
 </footer>
 

@@ -7,16 +7,24 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$pdo = db();
-
-// Fetch all proposals
-$stmt = $pdo->query("SELECT p.*, u.username FROM proposals p JOIN users u ON p.user_id = u.id ORDER BY p.created_at DESC");
-$proposals = $stmt->fetchAll();
+$user_id = $_SESSION['user_id'];
 
 // Fetch user role
+$pdo = db();
 $stmt = $pdo->prepare('SELECT role FROM users WHERE id = ?');
-$stmt->execute([$_SESSION['user_id']]);
+$stmt->execute([$user_id]);
 $user_role = $stmt->fetchColumn();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title']) && !empty($_POST['description'])) {
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+
+    $stmt = $pdo->prepare("INSERT INTO proposals (user_id, title, description) VALUES (?, ?, ?)");
+    $stmt->execute([$user_id, $title, $description]);
+
+    header("Location: proposals.php");
+    exit;
+}
 
 ?>
 <!DOCTYPE html>
@@ -24,7 +32,7 @@ $user_role = $stmt->fetchColumn();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposals</title>
+    <title>New Proposal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/custom.css">
 </head>
@@ -52,25 +60,21 @@ $user_role = $stmt->fetchColumn();
 </nav>
 
 <main class="container mt-4 flex-grow-1">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Proposals</h2>
-        <a href="create_proposal.php" class="btn btn-primary">New Proposal</a>
-    </div>
-    <div class="list-group">
-        <?php foreach ($proposals as $proposal): ?>
-            <a href="proposal.php?id=<?php echo $proposal['id']; ?>" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><?php echo htmlspecialchars($proposal['title']); ?></h5>
-                    <small><?php echo date('M j, Y', strtotime($proposal['created_at'])); ?></small>
-                </div>
-                <p class="mb-1"><?php echo htmlspecialchars(substr($proposal['description'], 0, 100)); ?>...</p>
-                <small>By <?php echo htmlspecialchars($proposal['username']); ?></small>
-            </a>
-        <?php endforeach; ?>
-    </div>
+    <h2>Create New Proposal</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Proposal</button>
+    </form>
 </main>
 
-<footer class="bg-dark text-white text-center p-3 mt-auto">
+<footer class="bg-.dark text-white text-center p-3 mt-auto">
     <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
 </footer>
 

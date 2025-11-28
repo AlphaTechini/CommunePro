@@ -123,7 +123,9 @@ $replies = $stmt->fetchAll();
         <h2>Replies</h2>
         <div class="mb-4">
             <?php if (empty($replies)): ?>
-                <p>No replies yet. Be the first to reply!</p>
+                <div class="text-center p-4" style="background-color: #161b22; border-radius: 0.5rem;">
+                    <p class="mb-0">No replies yet. Be the first to reply!</p>
+                </div>
             <?php else: ?>
                 <?php foreach ($replies as $reply): ?>
                     <div class="card card-neon mb-3">

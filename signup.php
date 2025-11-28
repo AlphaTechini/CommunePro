@@ -89,10 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/custom.css?v=<?php echo time(); ?>">
 </head>
+
 <body class="d-flex flex-column min-vh-100">
 
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="index.php">Community Hub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,74 +115,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </nav>
 
-
-<main class="flex-grow-1">
-    <section class="container mt-5">
+<main class="flex-grow-1 d-flex align-items-center justify-content-center">
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card card-neon">
-                    <div class="card-body">
-                        <h1 class="text-center mb-4">Create Your Account</h1>
-                        <?php if (!empty($errors)): ?>
-                            <div class="alert alert-danger">
-                                <?php foreach ($errors as $error): ?>
-                                    <p><?php echo $error; ?></p>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
-                        <form action="signup.php" method="POST" id="signup-form">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="city" class="form-label">City</label>
-                                <input type="text" class="form-control" id="city" name="city" value="<?php echo htmlspecialchars($city); ?>" required>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-primary btn-gradient">Sign Up</button>
-                            </div>
-                        </form>
-                    </div>
+            <div class="col-md-6 col-lg-5">
+                <div class="form-container">
+                    <h1 class="text-center mb-4">Create Your Account</h1>
+                    <?php if (!empty($errors)): ?>
+                        <div class="alert alert-danger">
+                            <?php foreach ($errors as $error): ?>
+                                <p class="mb-0"><?php echo $error; ?></p>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                    <form action="signup.php" method="POST" id="signup-form">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" name="city" value="<?php echo htmlspecialchars($city); ?>" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Sign Up</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </main>
 
-<footer class="bg-dark text-white text-center p-3 mt-auto">
+<footer class="footer text-center">
     <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    function getCity() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                // Using a free reverse geocoding API
-                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.address && data.address.city) {
-                            document.getElementById('city').value = data.address.city;
-                        }
-                    })
-                    .catch(err => console.error("Error fetching city:", err));
-            });
-        }
-    }
-    window.onload = getCity;
-</script>
+<script src="assets/js/city-finder.js?v=<?php echo time(); ?>"></script>
 
 </body>
 </html>

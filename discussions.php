@@ -111,7 +111,7 @@ $discussions = $stmt->fetchAll();
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="index.php">Community Hub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -133,59 +133,62 @@ $discussions = $stmt->fetchAll();
 </nav>
 
 <main class="flex-grow-1">
-    <section class="container mt-5">
-        <h1 class="text-center mb-4">Discussions in <?php echo htmlspecialchars($community['name']); ?></h1>
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Discussions in <?php echo htmlspecialchars($community['name']); ?></h1>
         
-        <div class="card card-neon mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Start a New Discussion</h2>
-                <?php if (!empty($errors)): ?>
-                    <div class="alert alert-danger">
-                        <?php foreach ($errors as $error): ?>
-                            <p><?php echo $error; ?></p>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-                <form action="discussions.php?community_id=<?php echo $community_id; ?>" method="POST">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="content" class="form-label">Content</label>
-                        <textarea class="form-control" id="content" name="content" rows="3" required><?php echo htmlspecialchars($content); ?></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-gradient">Post Discussion</button>
-                </form>
-            </div>
+        <div class="form-container mb-5">
+            <h2 class="mb-4">Start a New Discussion</h2>
+            <?php if (!empty($errors)): ?>
+                <div class="alert alert-danger">
+                    <?php foreach ($errors as $error): ?>
+                        <p class="mb-0"><?php echo $error; ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <form action="discussions.php?community_id=<?php echo $community_id; ?>" method="POST">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="4" required><?php echo htmlspecialchars($content); ?></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post Discussion</button>
+            </form>
         </div>
 
-        <h2 class="mb-3">Existing Discussions</h2>
+        <h2 class="mb-4">Existing Discussions</h2>
 
         <form action="discussions.php" method="GET" class="mb-4">
             <input type="hidden" name="community_id" value="<?php echo $community_id; ?>">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search discussions..." name="search" value="<?php echo htmlspecialchars($search); ?>">
-                <button class="btn btn-outline-secondary" type="submit">Search</button>
+                <input type="text" class="form-control" placeholder="Search discussions..." name="search" value="<?php echo htmlspecialchars($search); ?>" style="background-color: #0d1117; color: #c9d1d9; border-color: #30363d;">
+                <button class="btn btn-outline-secondary" type="submit" style="border-color: #30363d; color: #58a6ff;">Search</button>
             </div>
         </form>
 
-        <div class="list-group">
+        <div>
             <?php if (empty($discussions)): ?>
-                <p>No discussions found.</p>
+                <div class="text-center p-4" style="background-color: #161b22; border-radius: 0.5rem;">
+                    <p class="mb-0">No discussions found. Be the first to start one!</p>
+                </div>
             <?php else: ?>
                 <?php foreach ($discussions as $discussion): ?>
-                    <a href="discussion.php?id=<?php echo $discussion['id']; ?>" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1"><?php echo htmlspecialchars($discussion['title']); ?></h5>
-                            <small><?php echo date('M j, Y, g:i a', strtotime($discussion['created_at'])); ?></small>
+                    <div class="discussion-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">
+                                <a href="discussion.php?id=<?php echo $discussion['id']; ?>"><?php echo htmlspecialchars($discussion['title']); ?></a>
+                            </h5>
+                            <small class="text-muted"><?php echo date('M j, Y, g:i a', strtotime($discussion['created_at'])); ?></small>
                         </div>
-                        <p class="mb-1">Started by: <?php echo htmlspecialchars($discussion['user_name']); ?></p>
-                    </a>
+                        <p class="mb-1 text-muted">Started by: <?php echo htmlspecialchars($discussion['user_name']); ?></p>
+                    </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
 
+        <?php if ($total_pages > 1): ?>
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center mt-4">
                 <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
@@ -201,10 +204,11 @@ $discussions = $stmt->fetchAll();
                 </li>
             </ul>
         </nav>
-    </section>
+        <?php endif; ?>
+    </div>
 </main>
 
-<footer class="bg-dark text-white text-center p-3 mt-auto">
+<footer class="footer text-center">
     <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
 </footer>
 
