@@ -8,6 +8,15 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Fetch user role if logged in
+$user_role = null;
+if (isset($_SESSION['user_id'])) {
+    $pdo = db();
+    $stmt = $pdo->prepare('SELECT role FROM users WHERE id = ?');
+    $stmt->execute([$_SESSION['user_id']]);
+    $user_role = $stmt->fetchColumn();
+}
+
 if (!isset($_GET['id'])) {
     header('Location: communities.php');
     exit;
@@ -83,6 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                <li class="nav-item"><a class="nav-link" href="discussions.php?community_id=<?php echo $discussion['community_id']; ">Discussions</a></li>
+                <?php if ($user_role === 'leader'): ?>
+                    <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
+                <?php endif; ?>
                 <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="messages.php">Messages</a></li>
                 <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>

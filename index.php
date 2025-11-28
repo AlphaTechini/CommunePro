@@ -1,5 +1,17 @@
 
-<?php session_start(); ?>
+<?php 
+session_start();
+require_once 'db/config.php'; // Add this line
+
+// Fetch user role if logged in
+$user_role = null;
+if (isset($_SESSION['user_id'])) {
+    $pdo = db();
+    $stmt = $pdo->prepare('SELECT role FROM users WHERE id = ?');
+    $stmt->execute([$_SESSION['user_id']]);
+    $user_role = $stmt->fetchColumn();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,6 +35,9 @@
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                    <?php if ($user_role === 'leader'): ?>
+                        <li class="nav-item"><a class="nav-link" href="manage_communities.php">Manage Communities</a></li>
+                    <?php endif; ?>
                     <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="messages.php">Messages</a></li>
                     <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
