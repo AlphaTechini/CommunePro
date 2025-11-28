@@ -1,0 +1,8 @@
+
+CREATE TABLE IF NOT EXISTS `communities` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255) NOT NULL UNIQUE,
+  `leader_id` INT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`leader_id`) REFERENCES `users`(`id`)
+);

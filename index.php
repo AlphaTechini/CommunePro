@@ -1,150 +1,83 @@
-<?php
-declare(strict_types=1);
-@ini_set('display_errors', '1');
-@error_reporting(E_ALL);
-@date_default_timezone_set('UTC');
 
-$phpVersion = PHP_VERSION;
-$now = date('Y-m-d H:i:s');
-?>
-<!doctype html>
+<?php session_start(); ?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>New Style</title>
-<?php
-// Read project preview data from environment
-$projectDescription = $_SERVER['PROJECT_DESCRIPTION'] ?? '';
-$projectImageUrl = $_SERVER['PROJECT_IMAGE_URL'] ?? '';
-?>
-<?php if ($projectDescription): ?>
-  <!-- Meta description -->
-  <meta name="description" content='<?= htmlspecialchars($projectDescription) ?>' />
-  <!-- Open Graph meta tags -->
-  <meta property="og:description" content="<?= htmlspecialchars($projectDescription) ?>" />
-  <!-- Twitter meta tags -->
-  <meta property="twitter:description" content="<?= htmlspecialchars($projectDescription) ?>" />
-<?php endif; ?>
-<?php if ($projectImageUrl): ?>
-  <!-- Open Graph image -->
-  <meta property="og:image" content="<?= htmlspecialchars($projectImageUrl) ?>" />
-  <!-- Twitter image -->
-  <meta property="twitter:image" content="<?= htmlspecialchars($projectImageUrl) ?>" />
-<?php endif; ?>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-color-start: #6a11cb;
-      --bg-color-end: #2575fc;
-      --text-color: #ffffff;
-      --card-bg-color: rgba(255, 255, 255, 0.01);
-      --card-border-color: rgba(255, 255, 255, 0.1);
-    }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(45deg, var(--bg-color-start), var(--bg-color-end));
-      color: var(--text-color);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      text-align: center;
-      overflow: hidden;
-      position: relative;
-    }
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M-10 10L110 10M10 -10L10 110" stroke-width="1" stroke="rgba(255,255,255,0.05)"/></svg>');
-      animation: bg-pan 20s linear infinite;
-      z-index: -1;
-    }
-    @keyframes bg-pan {
-      0% { background-position: 0% 0%; }
-      100% { background-position: 100% 100%; }
-    }
-    main {
-      padding: 2rem;
-    }
-    .card {
-      background: var(--card-bg-color);
-      border: 1px solid var(--card-border-color);
-      border-radius: 16px;
-      padding: 2rem;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-    }
-    .loader {
-      margin: 1.25rem auto 1.25rem;
-      width: 48px;
-      height: 48px;
-      border: 3px solid rgba(255, 255, 255, 0.25);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    .hint {
-      opacity: 0.9;
-    }
-    .sr-only {
-      position: absolute;
-      width: 1px; height: 1px;
-      padding: 0; margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap; border: 0;
-    }
-    h1 {
-      font-size: 3rem;
-      font-weight: 700;
-      margin: 0 0 1rem;
-      letter-spacing: -1px;
-    }
-    p {
-      margin: 0.5rem 0;
-      font-size: 1.1rem;
-    }
-    code {
-      background: rgba(0,0,0,0.2);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    }
-    footer {
-      position: absolute;
-      bottom: 1rem;
-      font-size: 0.8rem;
-      opacity: 0.7;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/custom.css?v=<?php echo time(); ?>">
 </head>
-<body>
-  <main>
-    <div class="card">
-      <h1>Analyzing your requirements and generating your website…</h1>
-      <div class="loader" role="status" aria-live="polite" aria-label="Applying initial changes">
-        <span class="sr-only">Loading…</span>
-      </div>
-      <p class="hint"><?= ($_SERVER['HTTP_HOST'] ?? '') === 'appwizzy.com' ? 'AppWizzy' : 'Flatlogic' ?> AI is collecting your requirements and applying the first changes.</p>
-      <p class="hint">This page will update automatically as the plan is implemented.</p>
-      <p>Runtime: PHP <code><?= htmlspecialchars($phpVersion) ?></code> — UTC <code><?= htmlspecialchars($now) ?></code></p>
+<body class="d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.php">Community Hub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.php">Home</a></li>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <li class="nav-item"><a class="nav-link" href="communities.php">Communities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.php">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="messages.php">Messages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="signup.php">Sign Up</a></li>
+                <?php endif; ?>
+            </ul>
+        </div>
     </div>
-  </main>
-  <footer>
-    Page updated: <?= htmlspecialchars($now) ?> (UTC)
-  </footer>
+</nav>
+
+<main class="flex-grow-1">
+    <header class="hero text-white text-center">
+        <div class="container">
+            <h1 class="display-4">Build Your Community. Shape Your City.</h1>
+            <p class="lead">The platform where neighbors connect, leaders emerge, and real change starts with one discussion.</p>
+            <a href="signup.php" class="btn btn-primary btn-gradient me-2">Join Your City</a>
+            <a href="communities.php" class="btn btn-secondary">Explore Communities</a>
+        </div>
+    </header>
+
+    <section class="features text-center py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-icon mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <h3>Connect</h3>
+                    <p class="text-muted">Join communities in your city and connect with your neighbors.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-icon mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <h3>Discuss</h3>
+                    <p class="text-muted">Start and participate in discussions about topics that matter to you.</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-icon mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trending-up"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    </div>
+                    <h3>Organize</h3>
+                    <p class="text-muted">Create events and proposals to drive real change in your community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="bg-dark text-white text-center p-3 mt-auto">
+    <p>&copy; <?php echo date("Y"); ?> Community Hub. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
